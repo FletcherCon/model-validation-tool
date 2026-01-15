@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Validation Tool | Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #243044;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2d3a4f;
+            --glow-blue: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, var(--glow-blue) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-text .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin-top: 0.75rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .nav-tab.active {
+            color: var(--accent-cyan);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* Section */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Overview Section */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .overview-text {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .overview-text p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .overview-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .stats-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Check Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .category-icon.performance { background: rgba(239, 68, 68, 0.15); }
+        .category-icon.settings { background: rgba(139, 92, 246, 0.15); }
+        .category-icon.external { background: rgba(245, 158, 11, 0.15); }
+        .category-icon.datum { background: rgba(6, 182, 212, 0.15); }
+        .category-icon.views { background: rgba(16, 185, 129, 0.15); }
+        .category-icon.elements { background: rgba(59, 130, 246, 0.15); }
+        .category-icon.annotative { background: rgba(236, 72, 153, 0.15); }
+
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .category-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        .check-list {
+            list-style: none;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(45, 58, 79, 0.5);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .check-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Presets Section */
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .preset-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .preset-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
+        }
+
+        .preset-card.quick { border-top: 3px solid var(--accent-green); }
+        .preset-card.standard { border-top: 3px solid var(--accent-amber); }
+        .preset-card.full { border-top: 3px solid var(--accent-blue); }
+
+        .preset-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .preset-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .preset-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .preset-checks {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .preset-checks span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            display: flex;
+            gap: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Severity Legend */
+        .severity-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .severity-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .severity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .severity-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .severity-badge.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .severity-badge.info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .severity-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer .credit {
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .presets-grid {
+                grid-template-columns: 1fr;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            .severity-grid {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-icon">✓</div>
+                <div class="header-text">
+                    <h1>Model Validation Tool</h1>
+                    <p class="subtitle">Customised Revit Model Best Practices Checkset</p>
+                    <span class="version-badge">pyRevit Extension</span>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="overview">Overview</button>
+            <button class="nav-tab" data-tab="features">Features</button>
+            <button class="nav-tab" data-tab="categories">Check Categories</button>
+            <button class="nav-tab" data-tab="presets">Presets</button>
+        </nav>
+
+        <!-- Overview Section -->
+        <section id="overview" class="tab-content active">
+            <div class="section-header">
+                <div class="section-icon">📋</div>
+                <h2 class="section-title">Overview</h2>
+            </div>
+            <div class="overview-grid">
+                <div class="overview-text">
+                    <p>
+                        The <span class="highlight">Model Validation Tool</span> is a comprehensive Revit model auditing solution 
+                        designed to enforce best practices and maintain model health throughout the project lifecycle. 
+                        Built as a pyRevit extension, it provides instant feedback on model quality with actionable results.
+                    </p>
+                    <p>
+                        Perform systematic checks across <span class="highlight">7 categories</span> covering everything from 
+                        model performance and file management to annotation standards. Each check identifies issues, 
+                        counts affected elements, and provides direct links for quick navigation and resolution.
+                    </p>
+                    <p>
+                        Whether you need a quick pre-submission audit or a deep dive into model optimization, 
+                        flexible preset profiles and custom configurations ensure the right level of scrutiny for every scenario.
+                    </p>
+                </div>
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Individual Checks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Check Categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Preset Profiles</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Severity Legend (inside Overview) -->
+            <div class="severity-wrapper" style="margin-top: 2rem;">
+                <div class="section-header">
+                    <div class="section-icon">🚦</div>
+                    <h2 class="section-title">Severity Levels</h2>
+                </div>
+                <div class="severity-section">
+                    <div class="severity-grid">
+                        <div class="severity-item">
+                            <span class="severity-badge critical">Critical</span>
+                            <span class="severity-desc">Issues that must be resolved before project delivery</span>
+                        </div>
+                        <div class="severity-item">
+                            <span class="severity-badge warning">Warning</span>
+                            <span class="severity-desc">Best practice violations that should be addressed</span>
+                        </div>
+                        <div class="severity-item">
+                            <span class="severity-badge info">Info</span>
+                            <span class="severity-desc">Informational counts and listings for awareness</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon">⚡</div>
+                <h2 class="section-title">Key Features</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-content">
+                        <h3>Element-Level Reporting</h3>
+                        <p>Every check provides detailed element listings with clickable links to navigate directly to problem areas in your model.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h3>CSV Export</h3>
+                        <p>Export comprehensive validation results to CSV for external reporting, tracking, or integration with project workflows.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-content">
+                        <h3>Custom Configurations</h3>
+                        <p>Save and load check configurations to maintain consistent validation standards across projects and team members.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <h3>Batch Element Selection</h3>
+                        <p>Select all failed elements in one click for bulk editing, deletion, or further investigation in Revit.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📜</div>
+                    <div class="feature-content">
+                        <h3>Validation History</h3>
+                        <p>Track validation runs over time to monitor model health improvement and ensure issues stay resolved.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <div class="feature-content">
+                        <h3>Configurable Thresholds</h3>
+                        <p>Adjust warning limits for file size, element counts, and other metrics to match your project requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Check Categories Section -->
+        <section id="categories" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon">📁</div>
+                <h2 class="section-title">Check Categories</h2>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon performance">🚀</div>
+                        <span class="category-name">Model Performance</span>
+                        <span class="category-count">7 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">MP01</span> Model Warnings</li>
+                        <li class="check-item"><span class="check-id">MP02</span> File Size</li>
+                        <li class="check-item"><span class="check-id">MP03</span> In-Place Families</li>
+                        <li class="check-item"><span class="check-id">MP04</span> Imported DWG Geometry</li>
+                        <li class="check-item"><span class="check-id">MP05</span> Array Groups</li>
+                        <li class="check-item"><span class="check-id">MP06</span> Raster Images</li>
+                        <li class="check-item"><span class="check-id">MP07</span> Detail Lines Count</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon settings">⚙️</div>
+                        <span class="category-name">Project Settings</span>
+                        <span class="category-count">4 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">PS01</span> Project Information</li>
+                        <li class="check-item"><span class="check-id">PS02</span> Project Units</li>
+                        <li class="check-item"><span class="check-id">PS03</span> Starting View</li>
+                        <li class="check-item"><span class="check-id">PS04</span> Browser Organization</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon external">📎</div>
+                        <span class="category-name">External Files</span>
+                        <span class="category-count">5 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">EF01</span> Linked Revit Files</li>
+                        <li class="check-item"><span class="check-id">EF02</span> Linked CAD Files</li>
+                        <li class="check-item"><span class="check-id">EF03</span> Imported CAD Files</li>
+                        <li class="check-item"><span class="check-id">EF04</span> Point Clouds</li>
+                        <li class="check-item"><span class="check-id">EF05</span> Raster Images</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon datum">📐</div>
+                        <span class="category-name">Datum & Location</span>
+                        <span class="category-count">6 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">DL01</span> Project Base Point</li>
+                        <li class="check-item"><span class="check-id">DL02</span> Survey Point</li>
+                        <li class="check-item"><span class="check-id">DL03</span> Levels</li>
+                        <li class="check-item"><span class="check-id">DL04</span> Grids</li>
+                        <li class="check-item"><span class="check-id">DL05</span> Reference Planes</li>
+                        <li class="check-item"><span class="check-id">DL06</span> Scope Boxes</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon views">👁️</div>
+                        <span class="category-name">Views</span>
+                        <span class="category-count">6 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">VW01</span> Views Not On Sheets</li>
+                        <li class="check-item"><span class="check-id">VW02</span> View Templates</li>
+                        <li class="check-item"><span class="check-id">VW03</span> Unused View Templates</li>
+                        <li class="check-item"><span class="check-id">VW04</span> Schedules</li>
+                        <li class="check-item"><span class="check-id">VW05</span> Legends</li>
+                        <li class="check-item"><span class="check-id">VW06</span> Drafting Views</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon elements">🧱</div>
+                        <span class="category-name">Model Elements</span>
+                        <span class="category-count">10 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">ME01</span> Unplaced Rooms</li>
+                        <li class="check-item"><span class="check-id">ME02</span> Room Separation Lines</li>
+                        <li class="check-item"><span class="check-id">ME03</span> Unplaced Areas</li>
+                        <li class="check-item"><span class="check-id">ME04</span> Design Options</li>
+                        <li class="check-item"><span class="check-id">ME05</span> Groups</li>
+                        <li class="check-item"><span class="check-id">ME06</span> Worksets</li>
+                        <li class="check-item"><span class="check-id">ME07</span> Phases</li>
+                        <li class="check-item"><span class="check-id">ME08</span> Generic Models</li>
+                        <li class="check-item"><span class="check-id">ME09</span> Loadable Families</li>
+                        <li class="check-item"><span class="check-id">ME10</span> Duplicate Elements</li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon annotative">✏️</div>
+                        <span class="category-name">Annotative Elements</span>
+                        <span class="category-count">7 checks</span>
+                    </div>
+                    <ul class="check-list">
+                        <li class="check-item"><span class="check-id">AE01</span> Text Notes</li>
+                        <li class="check-item"><span class="check-id">AE02</span> Dimensions</li>
+                        <li class="check-item"><span class="check-id">AE03</span> Tags</li>
+                        <li class="check-item"><span class="check-id">AE04</span> Revision Clouds</li>
+                        <li class="check-item"><span class="check-id">AE05</span> Filled Regions</li>
+                        <li class="check-item"><span class="check-id">AE06</span> Sheets</li>
+                        <li class="check-item"><span class="check-id">AE07</span> Titleblocks</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Presets Section -->
+        <section id="presets" class="tab-content">
+            <div class="section-header">
+                <div class="section-icon">🎛️</div>
+                <h2 class="section-title">Validation Presets</h2>
+            </div>
+            <div class="presets-grid">
+                <div class="preset-card quick">
+                    <div class="preset-icon">⚡</div>
+                    <h3 class="preset-name">Quick Check</h3>
+                    <p class="preset-desc">Fast validation for daily checks and pre-submission reviews</p>
+                    <div class="preset-checks">5 <span>checks</span></div>
+                </div>
+                <div class="preset-card standard">
+                    <div class="preset-icon">✅</div>
+                    <h3 class="preset-name">Standard Validation</h3>
+                    <p class="preset-desc">Balanced coverage for milestone reviews and handovers</p>
+                    <div class="preset-checks">18 <span>checks</span></div>
+                </div>
+                <div class="preset-card full">
+                    <div class="preset-icon">🔬</div>
+                    <h3 class="preset-name">Full Best Practices</h3>
+                    <p class="preset-desc">Comprehensive audit covering all validation criteria</p>
+                    <div class="preset-checks">45 <span>checks</span></div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Model Validation Tool • <span class="credit">Digital Engineering Services</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-tab');
+
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Remove active class from all content sections
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Add active class to target content
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
